@@ -7,6 +7,7 @@ import random
 import time
 import liveplot
 import qlearn
+import os
 
 def render():
     render_skip = 0 #Skip first X episodes.
@@ -38,6 +39,11 @@ if __name__ == '__main__':
     start_time = time.time()
     total_episodes = 10000
     highest_reward = 0
+
+    qfile = "qlearn_states.npy"
+    if (os.path.exists(qfile)):
+        print("Loading from file:",qfile)
+        qlearn.loadQ(qfile)
 
     for x in range(total_episodes):
         done = False
@@ -93,5 +99,7 @@ if __name__ == '__main__':
     #print("Parameters: a="+str)
     print("Overall score: {:0.2f}".format(last_time_steps.mean()))
     print("Best 100 score: {:0.2f}".format(reduce(lambda x, y: x + y, l[-100:]) / len(l[-100:])))
+
+    qlearn.saveQ(qfile)
 
     env.close()
